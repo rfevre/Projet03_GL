@@ -1,0 +1,68 @@
+public class PileTableau<E> implements Pile<E> {
+    private E [] elements ; // les éléments contenus dans la pile
+    private int nbElem = 0 ; // le nombre d’éléments dans la pile
+    private String nom ; // nom de la pile : information supplémentaire propre à PileTableau
+
+    public PileTableau(String nom) {
+	this.elements = (E[]) new Object[MAX_ELEMENTS];
+	this.nom = nom;
+    }
+
+    public boolean vide() {
+	return elements[0]==null;
+    }
+
+    public boolean pleine() {
+	return elements[MAX_ELEMENTS-1]!=null;
+    }
+
+    public boolean peutEmpiler(E x) {
+	return pleine()!=true;
+    }
+
+    public E sommet() {
+	return elements[nbElem-1];
+    }
+
+    public E depile() {
+	E elementDepile = sommet();
+	elements[nbElem]=null;
+	nbElem--;
+	return elementDepile;
+    }
+
+    public void empile(E x) {
+	if (peutEmpiler(x)) {
+	    elements[nbElem]=x;
+	    nbElem++;
+	}
+    }
+
+    public void vider() {
+	for (int i=0;i<nbElem;i++)
+	    elements[i]=null;
+	nbElem=0;
+    }
+
+    public int nbElements() {
+	return nbElem;
+    }
+
+    public void deplacerUnElementVers(Pile<E> p) {
+	PileTableau<E> ptab = (PileTableau<E>)p;
+	System.out.println("Déplacement d'un élément de " +nom+ " vers " + ptab.getNom());
+	if(!p.pleine() && !this.vide())
+	    p.empile(depile());
+    }
+
+    public String getNom() {
+	return nom;
+    }
+    
+    public String toString() {
+	String chaine="";
+	for (int i=nbElem-1;i>=0;i--)
+	    chaine += elements[i] + "\n";
+	return chaine;
+    }
+}

@@ -5,6 +5,7 @@ public class PileHanoi implements Pile<DisqueHanoi> {
     private DisqueHanoi [] elements ;
     private int nbElem = 0 ;
     private String nom = "la pile" ;
+    private Affichage algoAffichage = new AffichageSimple() ;
 
     /** Constructeur qui crée une pile vide */
     public PileHanoi() {
@@ -17,6 +18,13 @@ public class PileHanoi implements Pile<DisqueHanoi> {
 	this.nom = nom ;
     }
 
+    /** Constructeur specifiant un algorithme d’affichage particulier */
+    public PileHanoi(String nom, Affichage a) { 
+	elements = new DisqueHanoi[MAX_ELEMENTS] ;
+	this.nom = nom ;
+	algoAffichage = a ;
+    }
+    
 
     
     ////////////////////////////////////////////
@@ -76,6 +84,7 @@ public class PileHanoi implements Pile<DisqueHanoi> {
 	return nbElem ;
     }
 
+    /** déplace un élement vers une autre pile*/
     public void deplacerUnElementVers(Pile<DisqueHanoi> p) {
 	if (!vide() && p.peutEmpiler(sommet())) {
 	    p.empile(this.depile()) ;
@@ -87,17 +96,29 @@ public class PileHanoi implements Pile<DisqueHanoi> {
     
     /** affichage */
     public String toString() {
-	String s = nom + " : ";
-	for (int i = 0; i<=nbElem-1; i++)
-	    s +=elements[i].diametre() + " " ;
-	return s ;
+	Disque[] lesDisques = elements;
+	if (!vide())
+	    return nom + " : " + algoAffichage.affichage_tableau(lesDisques, nbElem) ;
+	else
+	    return nom + " : ";
     }
+    
     //
     // METHODES PROPRES A PileTableau
     //
 
     /** accès au nom de la pile */
     public String nom() { return nom ; }
+
+    /** méthode récursif qui résou automatiquement le problème Hanoi */
+    public void deplacerDesDisques(int n, PileHanoi dest, PileHanoi interm) {
+	if (n!=0) {
+	    this.deplacerDesDisques(n-1,interm,dest);
+	    this.deplacerUnElementVers(dest);
+	    Hanoi.affiche();
+	    interm.deplacerDesDisques(n-1,dest,this);
+	}	
+    }
 
     // TEST
     /*public static void main(String [] arg) {
